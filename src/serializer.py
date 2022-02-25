@@ -1,6 +1,4 @@
 from marshmallow import Schema,fields
-from src.database import User
-
 
 class UserSchema(Schema):
     id = fields.Integer()

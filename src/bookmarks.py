@@ -64,6 +64,7 @@ def handle_bookmarks():
 
 @bookmarks.get("/<int:id>")
 @jwt_required()
+@swag_from("./docs/bookmarks/getbookmarkbyid.yaml")
 def get_bookmark(id):
     current_user = get_jwt_identity()
 

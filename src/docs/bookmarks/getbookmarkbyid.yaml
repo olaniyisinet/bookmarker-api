@@ -1,0 +1,20 @@
+Get Bookmark by Id
+---
+tags:
+  - Bookmarks
+parameters:
+  - name: id
+    in: path
+    required: true
+  # - name: Authorization
+  #   in: header
+  #   required: true
+responses:
+  200:
+    description: Queried successfully
+
+  400:
+    description: Query failed
+
+  401:
+    description: Invalid Id

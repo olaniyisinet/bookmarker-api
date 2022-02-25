@@ -4,8 +4,8 @@ class UserSchema(Schema):
     id = fields.Integer()
     username = fields.String()
     email = fields.String()
-    created_at = fields.DateTime('%Y-%m-%dT%H:%M:%S')
-    updated_at = fields.DateTime('%Y-%m-%dT%H:%M:%S')
+    # created_at = fields.DateTime('%Y-%m-%dT%H:%M:%S')
+    # updated_at = fields.DateTime('%Y-%m-%dT%H:%M:%S')
 
 class BookmarkSchema(Schema):
     id = fields.Integer()
@@ -16,4 +16,4 @@ class BookmarkSchema(Schema):
     # user_id = fields.Integer()
     created_at = fields.DateTime('%Y-%m-%dT%H:%M:%S')
     updated_at = fields.DateTime('%Y-%m-%dT%H:%M:%S')
-    user = fields.Nested(lambda: UserSchema(only=("email", "username", "id")))
+    # user = fields.Nested(lambda: UserSchema(only=("email", "username", "id")))

@@ -3,9 +3,9 @@ from flask import Blueprint, request
 from flask.json import jsonify
 import validators
 from flask_jwt_extended import get_jwt_identity, jwt_required
-from src.database import Bookmark, db
+from src.database import Bookmark, User, db
 from flasgger import swag_from
-from src.serializer import BookmarkSchema
+from src.serializer import BookmarkSchema, UserSchema
 
 bookmarks = Blueprint("bookmarks", __name__, url_prefix="/api/v1/bookmarks")
 
@@ -45,10 +45,12 @@ def handle_bookmarks():
 
         bookmarks = Bookmark.query.filter_by(
             user_id=current_user).paginate(page=page, per_page=per_page)
-
-        serialize = BookmarkSchema(many=True)
-        data = serialize.dump(bookmarks.items)
         
+        user = User.query.filter_by(id=current_user).first()
+
+        bookmark = BookmarkSchema(many=True).dump(bookmarks.items)
+        userData = UserSchema().dump(user)
+
         meta = {
             "page": bookmarks.page,
             'pages': bookmarks.pages,
@@ -59,7 +61,7 @@ def handle_bookmarks():
             'has_prev': bookmarks.has_prev,
         }
 
-        return jsonify({'data': data, "meta": meta}), HTTP_200_OK
+        return jsonify({'user': userData, "bookmarks": bookmark, "meta": meta}), HTTP_200_OK
 
 
 @bookmarks.get("/<int:id>")

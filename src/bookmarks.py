@@ -5,6 +5,7 @@ import validators
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from src.database import Bookmark, db
 from flasgger import swag_from
+from src.serializer import BookmarkSchema
 
 bookmarks = Blueprint("bookmarks", __name__, url_prefix="/api/v1/bookmarks")
 
@@ -33,15 +34,10 @@ def handle_bookmarks():
         db.session.add(bookmark)
         db.session.commit()
 
-        return jsonify({
-            'id': bookmark.id,
-            'url': bookmark.url,
-            'short_url': bookmark.short_url,
-            'visit': bookmark.visits,
-            'body': bookmark.body,
-            'created_at': bookmark.created_at,
-            'updated_at': bookmark.updated_at,
-        }), HTTP_201_CREATED
+        serialize = BookmarkSchema()
+        data = serialize.dump(bookmark)
+
+        return jsonify(data),  HTTP_201_CREATED
 
     else:
         page = request.args.get('page', 1, type=int)
@@ -50,18 +46,19 @@ def handle_bookmarks():
         bookmarks = Bookmark.query.filter_by(
             user_id=current_user).paginate(page=page, per_page=per_page)
 
-        data = []
+        serialize = BookmarkSchema(many=True)
+        data = serialize.dump(bookmarks.items)
 
-        for bookmark in bookmarks.items:
-            data.append({
-                'id': bookmark.id,
-                'url': bookmark.url,
-                'short_url': bookmark.short_url,
-                'visit': bookmark.visits,
-                'body': bookmark.body,
-                'created_at': bookmark.created_at,
-                'updated_at': bookmark.updated_at,
-            })
+        # for bookmark in bookmarks.items:
+        #     data.append({
+        #         'id': bookmark.id,
+        #         'url': bookmark.url,
+        #         'short_url': bookmark.short_url,
+        #         'visit': bookmark.visits,
+        #         'body': bookmark.body,
+        #         'created_at': bookmark.created_at,
+        #         'updated_at': bookmark.updated_at,
+        #     })
 
         meta = {
             "page": bookmarks.page,
@@ -71,7 +68,6 @@ def handle_bookmarks():
             'next_page': bookmarks.next_num,
             'has_next': bookmarks.has_next,
             'has_prev': bookmarks.has_prev,
-
         }
 
         return jsonify({'data': data, "meta": meta}), HTTP_200_OK

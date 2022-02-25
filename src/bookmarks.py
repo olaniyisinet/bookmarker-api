@@ -48,18 +48,7 @@ def handle_bookmarks():
 
         serialize = BookmarkSchema(many=True)
         data = serialize.dump(bookmarks.items)
-
-        # for bookmark in bookmarks.items:
-        #     data.append({
-        #         'id': bookmark.id,
-        #         'url': bookmark.url,
-        #         'short_url': bookmark.short_url,
-        #         'visit': bookmark.visits,
-        #         'body': bookmark.body,
-        #         'created_at': bookmark.created_at,
-        #         'updated_at': bookmark.updated_at,
-        #     })
-
+        
         meta = {
             "page": bookmarks.page,
             'pages': bookmarks.pages,

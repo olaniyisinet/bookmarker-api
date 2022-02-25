@@ -9,7 +9,6 @@ from flask_jwt_extended import JWTManager
 from flasgger import Swagger, swag_from
 from src.config.swagger import template, swagger_config
 
-
 def create_app(test_config=None):
 
     app = Flask(__name__, instance_relative_config=True)
@@ -20,7 +19,6 @@ def create_app(test_config=None):
             SQLALCHEMY_DATABASE_URI=os.environ.get("SQLALCHEMY_DB_URI"),
             SQLALCHEMY_TRACK_MODIFICATIONS=False,
             JWT_SECRET_KEY=os.environ.get('JWT_SECRET_KEY'),
-
 
             SWAGGER={
                 'title': "Bookmarks API",
@@ -38,6 +36,7 @@ def create_app(test_config=None):
     app.register_blueprint(bookmarks)
 
     Swagger(app, config=swagger_config, template=template)
+
 
     @app.get('/<short_url>')
     @swag_from('./docs/short_url.yaml')

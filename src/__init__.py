@@ -1,6 +1,6 @@
 from flask.json import jsonify
 from src.constants.http_status_codes import HTTP_404_NOT_FOUND, HTTP_500_INTERNAL_SERVER_ERROR
-from flask import Flask, config, redirect
+from flask import Flask, config, redirect, render_template
 import os
 from src.auth import auth
 from src.bookmarks import bookmarks
@@ -37,6 +37,10 @@ def create_app(test_config=None):
 
     Swagger(app, config=swagger_config, template=template)
 
+    @app.route('/api/docs')
+    def get_docs():
+        print('sending docs')
+        return render_template('swaggerui.html')
 
     @app.get('/<short_url>')
     @swag_from('./docs/short_url.yaml')
